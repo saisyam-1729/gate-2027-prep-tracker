@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { ROADMAP_PHASES } from '../data/initialData';
 import { SyncConfig, TrackerState } from '../types';
-import { generateFullPrepICS, generateGoogleCalendarUrl } from '../utils/calendarUtils';
+import {
+  DEFAULT_CALENDAR_EMAIL,
+  GITHUB_PROFILE_URL,
+  GITHUB_REPO_URL,
+  generateFullPrepICS,
+  generateGoogleCalendarUrl,
+} from '../utils/calendarUtils';
 import {
   pullStateFromGitHubGist,
   pushStateToGitHubGist,
@@ -18,6 +24,8 @@ import {
   RefreshCw,
   Clock,
   FileJson,
+  Mail,
+  Github,
 } from 'lucide-react';
 
 interface CalendarAndSyncViewProps {
@@ -33,10 +41,13 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
   onUpdateSyncConfig,
   onRestoreState,
 }) => {
+  const [calendarEmail, setCalendarEmail] = useState(DEFAULT_CALENDAR_EMAIL);
   const [weekdayHour, setWeekdayHour] = useState(20); // 8:00 PM
   const [weekendHour, setWeekendHour] = useState(9); // 9:00 AM
   const [gistTokenInput, setGistTokenInput] = useState(syncConfig.githubToken || '');
-  const [gistIdInput, setGistIdInput] = useState(syncConfig.gistId || '');
+  const [gistIdInput, setGistIdInput] = useState(
+    syncConfig.gistId || 'ef705b7841a16ed5a129699ce3ab10f9'
+  );
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [copiedDeviceLink, setCopiedDeviceLink] = useState(false);
@@ -47,14 +58,28 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
   const localLanUrl = `http://172.16.2.52:5173/?gist=${
     gistIdInput || 'ef705b7841a16ed5a129699ce3ab10f9'
   }`;
+  const vercelImportUrl = `https://vercel.com/new/import?s=${encodeURIComponent(
+    GITHUB_REPO_URL
+  )}`;
+  const gcalDirectImportSettingsUrl = `https://calendar.google.com/calendar/r/settings/export?authuser=${encodeURIComponent(
+    calendarEmail
+  )}`;
+  const gcalOpenAccountUrl = `https://calendar.google.com/calendar/r?authuser=${encodeURIComponent(
+    calendarEmail
+  )}`;
 
   const handleDownloadICS = () => {
-    const icsContent = generateFullPrepICS(state.topics, weekdayHour, weekendHour);
+    const icsContent = generateFullPrepICS(
+      state.topics,
+      weekdayHour,
+      weekendHour,
+      calendarEmail
+    );
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'GATE-2027-RA-DA-Study-Schedule-SyamP.ics';
+    a.download = `GATE-2027-RA-DA-Schedule-${calendarEmail.split('@')[0]}.ics`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -85,7 +110,9 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
           setSyncMessage('Error: Invalid tracker JSON structure.');
         }
       } catch (err) {
-        setSyncMessage(`Error parsing JSON: ${err instanceof Error ? err.message : String(err)}`);
+        setSyncMessage(
+          `Error parsing JSON: ${err instanceof Error ? err.message : String(err)}`
+        );
       }
     };
     reader.readAsText(file);
@@ -93,7 +120,9 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
 
   const handlePushToGist = async () => {
     if (!gistTokenInput.trim()) {
-      setSyncMessage('Please enter a GitHub Personal Access Token (with "gist" scope) to push.');
+      setSyncMessage(
+        'Please enter a GitHub Personal Access Token (with "gist" scope) to push.'
+      );
       return;
     }
     setIsSyncing(true);
@@ -111,10 +140,12 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
       saveSyncConfig(updatedCfg);
       onUpdateSyncConfig(updatedCfg);
       setSyncMessage(
-        `Saved to Cloud Gist (${res.gistId})! Use this Gist ID on any device (phone/tablet/laptop) to stay in sync.`
+        `Saved to Cloud Gist (${res.gistId}) under saisyam-1729! Any device opening your link will pull this state.`
       );
     } catch (err) {
-      setSyncMessage(err instanceof Error ? err.message : 'Failed to push to GitHub Gist.');
+      setSyncMessage(
+        err instanceof Error ? err.message : 'Failed to push to GitHub Gist.'
+      );
     } finally {
       setIsSyncing(false);
     }
@@ -141,13 +172,15 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
       onUpdateSyncConfig(updatedCfg);
       setSyncMessage('Successfully pulled latest progress from Cloud Gist!');
     } catch (err) {
-      setSyncMessage(err instanceof Error ? err.message : 'Failed to pull from GitHub Gist.');
+      setSyncMessage(
+        err instanceof Error ? err.message : 'Failed to pull from GitHub Gist.'
+      );
     } finally {
       setIsSyncing(false);
     }
   };
 
-  // Pre-built Google Calendar quick-add links
+  // Pre-built Google Calendar quick-add links routed directly to saisyam1441@gmail.com
   const satGCalUrl = generateGoogleCalendarUrl({
     title: '⚡ GATE 2027 Saturday Deep-Dive: 100% RA (Circuits / Robotics / Control)',
     details:
@@ -157,6 +190,7 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     startMinute: 0,
     durationMinutes: 330,
     recurrenceRule: 'RRULE:FREQ=WEEKLY;BYDAY=SA;UNTIL=20270131T235959Z',
+    calendarEmail,
   });
 
   const sunGCalUrl = generateGoogleCalendarUrl({
@@ -168,6 +202,7 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     startMinute: 0,
     durationMinutes: 330,
     recurrenceRule: 'RRULE:FREQ=WEEKLY;BYDAY=SU;UNTIL=20270131T235959Z',
+    calendarEmail,
   });
 
   const weekdayGCalUrl = generateGoogleCalendarUrl({
@@ -179,10 +214,12 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     startMinute: 0,
     durationMinutes: 120,
     recurrenceRule: 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=20270205T235959Z',
+    calendarEmail,
   });
 
   const certMicroGCalUrl = generateGoogleCalendarUrl({
-    title: '☁️ Low-Footprint Cert Micro-Sprint: Anthropic Claude CCA-F & Google Cloud PMLE (45m)',
+    title:
+      '☁️ Low-Footprint Cert Micro-Sprint: Anthropic Claude CCA-F & Google Cloud PMLE (45m)',
     details:
       'Low-footprint certification micro-track (~1.5 hrs/week total across Wed & Sun):\n1) 25 mins: 1 CCA-F Task Statement (ccar-f.17labs.ai / Skilljar) OR 1 GCP PMLE Section (BigQuery ML / Feature Store / MLOps)\n2) 20 mins: 10 scenario practice questions (AndyTheFactory/gcp-pmle-quiz or CCA-F 12 Sample Qs).\nAutomatically pauses Jan 18, 2027 for 100% GATE Lock-in!',
     dateStr: '2026-10-28',
@@ -190,6 +227,7 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     startMinute: 0,
     durationMinutes: 45,
     recurrenceRule: 'RRULE:FREQ=WEEKLY;BYDAY=WE,SU;UNTIL=20270117T235959Z',
+    calendarEmail,
   });
 
   return (
@@ -199,63 +237,101 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
         <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-6 space-y-5">
           <div>
             <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
-              <Calendar className="w-4 h-4" /> Calendar Sync (Google, Outlook & Apple Calendar)
+              <Calendar className="w-4 h-4" /> Calendar Sync ({calendarEmail})
             </div>
             <h2 className="text-xl font-bold text-white mt-1">
-              Sync Your 15-Hour/Week Study Blocks & Official Exam Dates
+              Synced to Your Google Calendar ({calendarEmail})
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Generates your recurring Weekday (2h), Saturday All-RA (5.5h), and Sunday RA+DA+Quiz
-              (5.5h) blocks, plus all 4 revised Phase milestones, Spaced-Repetition due dates, and
-              IIT Madras official GATE 2027 exam dates.
+              Every Google Calendar link below includes{' '}
+              <code className="text-indigo-300">authuser={calendarEmail}</code> so it routes
+              directly to your personal Gmail calendar (even if you are signed into multiple
+              accounts), and the Master <code className="text-indigo-300">.ics</code> file embeds
+              15-minute native popup alarms (<code className="text-indigo-300">VALARM</code>) for{' '}
+              <code className="text-indigo-300">{calendarEmail}</code>.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 bg-slate-950/70 border border-slate-800/80 rounded-lg p-4">
+          <div className="space-y-3 bg-slate-950/70 border border-slate-800/80 rounded-lg p-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-indigo-400" /> Weekday Start Time (Mon–Fri)
+              <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-emerald-400" /> Target Calendar Email Account
               </label>
-              <select
-                value={weekdayHour}
-                onChange={(e) => setWeekdayHour(Number(e.target.value))}
-                className="w-full rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white"
-              >
-                <option value={6}>6:00 AM – 8:00 AM</option>
-                <option value={7}>7:00 AM – 9:00 AM</option>
-                <option value={19}>7:00 PM – 9:00 PM</option>
-                <option value={20}>8:00 PM – 10:00 PM (Recommended)</option>
-                <option value={21}>9:00 PM – 11:00 PM</option>
-              </select>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={calendarEmail}
+                  onChange={(e) => setCalendarEmail(e.target.value)}
+                  className="flex-1 rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white font-mono"
+                />
+                <a
+                  href={gcalOpenAccountUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-indigo-300 flex items-center gap-1 shrink-0"
+                >
+                  Open GCal <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-emerald-400" /> Weekend Start Time (Sat–Sun)
-              </label>
-              <select
-                value={weekendHour}
-                onChange={(e) => setWeekendHour(Number(e.target.value))}
-                className="w-full rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white"
-              >
-                <option value={8}>8:00 AM – 1:30 PM</option>
-                <option value={9}>9:00 AM – 2:30 PM (Recommended)</option>
-                <option value={10}>10:00 AM – 3:30 PM</option>
-                <option value={14}>2:00 PM – 7:30 PM</option>
-              </select>
+
+            <div className="grid grid-cols-2 gap-4 pt-1">
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-indigo-400" /> Weekday Start (Mon–Fri)
+                </label>
+                <select
+                  value={weekdayHour}
+                  onChange={(e) => setWeekdayHour(Number(e.target.value))}
+                  className="w-full rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white"
+                >
+                  <option value={6}>6:00 AM – 8:00 AM</option>
+                  <option value={7}>7:00 AM – 9:00 AM</option>
+                  <option value={19}>7:00 PM – 9:00 PM</option>
+                  <option value={20}>8:00 PM – 10:00 PM (Recommended)</option>
+                  <option value={21}>9:00 PM – 11:00 PM</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-emerald-400" /> Weekend Start (Sat–Sun)
+                </label>
+                <select
+                  value={weekendHour}
+                  onChange={(e) => setWeekendHour(Number(e.target.value))}
+                  className="w-full rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white"
+                >
+                  <option value={8}>8:00 AM – 1:30 PM</option>
+                  <option value={9}>9:00 AM – 2:30 PM (Recommended)</option>
+                  <option value={10}>10:00 AM – 3:30 PM</option>
+                  <option value={14}>2:00 PM – 7:30 PM</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <button
-            onClick={handleDownloadICS}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg transition"
-          >
-            <Download className="w-4 h-4" />
-            Download Complete GATE 2027 Master Calendar (.ics)
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button
+              onClick={handleDownloadICS}
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg transition"
+            >
+              <Download className="w-4 h-4" />
+              1. Download Master .ics ({calendarEmail.split('@')[0]})
+            </button>
+            <a
+              href={gcalDirectImportSettingsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition"
+            >
+              <ExternalLink className="w-4 h-4" />
+              2. Open {calendarEmail.split('@')[0]} GCal Import Page
+            </a>
+          </div>
 
           <div className="space-y-2.5 pt-2 border-t border-slate-800">
             <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-              One-Click Google Calendar Recurring Series:
+              One-Click Google Calendar Recurring Series (Routed to {calendarEmail}):
             </div>
             <div className="grid grid-cols-1 gap-2">
               <a
@@ -298,50 +374,99 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
           </div>
         </div>
 
-        {/* Cross-Device Cloud & JSON Sync Card */}
+        {/* Cross-Device Cloud, GitHub Profile & Vercel Sync Card */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-6 space-y-5">
           <div>
             <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-              <Cloud className="w-4 h-4" /> Cross-Device Sync (Laptop, Phone & Tablet)
+              <Cloud className="w-4 h-4" /> GitHub (saisyam-1729), Vercel & Multi-Device Cloud Sync
             </div>
             <h2 className="text-xl font-bold text-white mt-1">
-              Two-Way GitHub Gist Cloud Sync & Multi-Device Links
+              Live Deployments & Two-Way GitHub Gist Cloud Sync
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Your private Cloud Sync Gist (<code className="text-emerald-300">ef705b7841a16ed5a129699ce3ab10f9</code>) is pre-configured! Open the live GitHub Pages URL or LAN URL below on your phone or tablet—checking off a topic on one device syncs across all devices.
+              Linked to{' '}
+              <a
+                href={GITHUB_PROFILE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-300 underline font-semibold"
+              >
+                github.com/saisyam-1729
+              </a>{' '}
+              and <code className="text-emerald-300">saisyam1441@gmail.com</code>.
             </p>
           </div>
 
           {/* Live Multi-Device Access Links */}
-          <div className="bg-emerald-950/25 border border-emerald-500/30 rounded-xl p-3.5 space-y-2">
-            <div className="flex items-center justify-between">
+          <div className="bg-emerald-950/25 border border-emerald-500/30 rounded-xl p-3.5 space-y-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                📱 Open on Phone / Tablet / Any Browser:
+                📱 Live Cloud & Mobile Access Links:
               </span>
-              <button
-                type="button"
-                onClick={() => {
-                  navigator.clipboard.writeText(liveGitHubPagesUrl);
-                  setCopiedDeviceLink(true);
-                  setTimeout(() => setCopiedDeviceLink(false), 2000);
-                }}
-                className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition"
-              >
-                {copiedDeviceLink ? 'Copied Live URL ✓' : 'Copy Cloud Sync URL'}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(liveGitHubPagesUrl);
+                    setCopiedDeviceLink(true);
+                    setTimeout(() => setCopiedDeviceLink(false), 2000);
+                  }}
+                  className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition"
+                >
+                  {copiedDeviceLink ? 'Copied Live URL ✓' : 'Copy Cloud Sync URL'}
+                </button>
+                <a
+                  href={vercelImportUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-[11px] font-bold flex items-center gap-1 transition"
+                  title="One-click import saisyam-1729/gate-2027-prep-tracker into your Vercel account (saisyam1441@gmail.com)"
+                >
+                  ▲ Deploy on Vercel <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
             <div className="text-xs font-mono text-slate-200 break-all bg-slate-950/80 border border-slate-800 rounded px-2.5 py-1.5">
-              🌐 Cloud URL: <a href={liveGitHubPagesUrl} target="_blank" rel="noreferrer" className="text-indigo-300 underline">{liveGitHubPagesUrl}</a>
+              🌐 Live GitHub Pages:{' '}
+              <a
+                href={liveGitHubPagesUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-300 underline"
+              >
+                {liveGitHubPagesUrl}
+              </a>
             </div>
             <div className="text-xs font-mono text-slate-300 break-all bg-slate-950/80 border border-slate-800 rounded px-2.5 py-1.5">
-              📶 Same-WiFi LAN URL: <a href={localLanUrl} target="_blank" rel="noreferrer" className="text-emerald-300 underline">{localLanUrl}</a>
+              📶 Same-WiFi LAN URL:{' '}
+              <a
+                href={localLanUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-emerald-300 underline"
+              >
+                {localLanUrl}
+              </a>
+            </div>
+            <div className="text-xs font-mono text-slate-300 break-all bg-slate-950/80 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between">
+              <span>
+                <Github className="w-3.5 h-3.5 inline mr-1 text-slate-400" /> Repo:{' '}
+                <a
+                  href={GITHUB_REPO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-indigo-300 underline"
+                >
+                  {GITHUB_REPO_URL}
+                </a>
+              </span>
             </div>
           </div>
 
           <div className="space-y-3 bg-slate-950/70 border border-slate-800/80 rounded-lg p-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                GitHub Personal Access Token (with `gist` scope)
+                GitHub Personal Access Token (with `gist` scope for saisyam-1729)
               </label>
               <input
                 type="password"
@@ -354,13 +479,13 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Cloud Gist ID (Leave blank on first Push to auto-create a private Gist)
+                Cloud Gist ID (Pre-configured under saisyam-1729)
               </label>
               <input
                 type="text"
                 value={gistIdInput}
                 onChange={(e) => setGistIdInput(e.target.value)}
-                placeholder="e.g., a1b2c3d4e5f6g7h8i9j0 (auto-filled after first push)"
+                placeholder="ef705b7841a16ed5a129699ce3ab10f9"
                 className="w-full rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white font-mono"
               />
             </div>
@@ -400,7 +525,8 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
 
           <div className="pt-2 border-t border-slate-800 space-y-2.5">
             <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <FileJson className="w-3.5 h-3.5 text-amber-400" /> Local JSON Snapshot Export / Import & Crash Recovery
+              <FileJson className="w-3.5 h-3.5 text-amber-400" /> Local JSON Snapshot Export /
+              Import & Crash Recovery
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <button
@@ -423,7 +549,9 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
                 type="button"
                 onClick={() => {
                   try {
-                    const raw = localStorage.getItem('gate_2027_prep_tracker_rolling_backups_v1');
+                    const raw = localStorage.getItem(
+                      'gate_2027_prep_tracker_rolling_backups_v1'
+                    );
                     if (!raw) {
                       setSyncMessage('No rolling backup snapshot found yet.');
                       return;

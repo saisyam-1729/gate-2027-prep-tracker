@@ -660,9 +660,17 @@ export function App() {
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                {state.candidateName} • GOAPS Enrollment:{' '}
-                <span className="font-mono text-slate-300">{state.enrollmentId}</span> • 80% RA
-                (B1) / 20% DA + Cert Micro-Track (GCP PMLE & Claude CCA-F)
+                {state.candidateName} •{' '}
+                <a
+                  href="https://github.com/saisyam-1729"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-indigo-300 hover:underline font-mono"
+                >
+                  github.com/saisyam-1729
+                </a>{' '}
+                • <span className="font-mono text-slate-300">saisyam1441@gmail.com</span> • GOAPS:{' '}
+                <span className="font-mono text-slate-300">{state.enrollmentId}</span>
               </p>
             </div>
           </div>
