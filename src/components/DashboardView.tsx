@@ -86,7 +86,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <span>
-                  Phase dates shifted to Revised Schedule (Status Banner: <b>ON TRACK</b>)
+                  Phase dates stay on the revised schedule. Status: <b>slightly behind</b> after Sat 24, Sun 25, and Mon 26 Oct were missed
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -209,7 +209,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 Active Phase 1: Foundations (Now – 29 Nov 2026)
               </span>
               <h3 className="text-lg font-bold text-white mt-0.5">
-                Immediate Execution Plan: Circuits, Network Theorems & DBMS
+                Tonight is a normal 2-hour restart. The missed weekend moves to 31 Oct–1 Nov.
               </h3>
             </div>
             <button
@@ -223,7 +223,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2.5">
               <div className="text-xs font-bold text-indigo-300 uppercase tracking-wider">
-                ⚡ Saturday Plan (5–6 Hours, 100% RA)
+                ⚡ This Saturday, 31 Oct (5–6 Hours, 100% RA)
               </div>
               <ul className="space-y-2 text-xs text-slate-300 leading-relaxed">
                 <li>
@@ -243,7 +243,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2.5">
               <div className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                🧠 Sunday Plan (5–6 Hours, RA + DA + Quiz)
+                🧠 This Sunday, 1 Nov (5–6 Hours, RA + DA + Quiz)
               </div>
               <ul className="space-y-2 text-xs text-slate-300 leading-relaxed">
                 <li>

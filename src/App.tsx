@@ -85,6 +85,33 @@ function getInitialTrackerState(): TrackerState {
         if (!parsed.dailyCheckins) {
           parsed.dailyCheckins = {};
         }
+        // Keep the hours log honest after the missed 24, 25, and 26 Oct sessions,
+        // without overwriting hours the person has already typed in.
+        const missedNotes: Record<number, { label: string; notes: string }> = {
+          2: {
+            label: 'Week 2 (19–25 Oct) — Restart Weekend (Circuits + DBMS)',
+            notes:
+              'Logged honestly: RA diagnostic only (~1h, 1/10). Sat 24 Oct and Sun 25 Oct study blocks were missed. Do not backfill fake hours. Circuits weekend moves to 31 Oct–1 Nov.',
+          },
+          3: {
+            label: 'Week 3 (26 Oct – 1 Nov) — Restart after 3 missed sessions',
+            notes:
+              'Mon 26 Oct missed (with Sat 24 and Sun 25). Tue 27 Oct is a normal 2h restart: KCL/KVL, node and mesh, 15m GA. Wed–Fri stay 2h. Sat 31 Oct and Sun 1 Nov carry the original circuits weekend. Phase 1 still ends 29 Nov if this weekend happens.',
+          },
+        };
+        parsed.weeklyHours = parsed.weeklyHours.map((w) => {
+          const patch = missedNotes[w.weekNumber];
+          if (!patch) return w;
+          const untouched =
+            (w.weekNumber === 2 && w.raHours <= 1 && w.daHours === 0 && w.gaHours === 0) ||
+            (w.weekNumber === 3 &&
+              w.raHours === 0 &&
+              w.daHours === 0 &&
+              w.gaHours === 0 &&
+              (w.certHours || 0) === 0);
+          if (!untouched) return w;
+          return { ...w, label: patch.label, notes: patch.notes };
+        });
         return parsed;
       }
     }
@@ -656,7 +683,7 @@ export function App() {
                   GATE 2027 Command Center — RA (Top AIR Target) & DA
                 </h1>
                 <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  <CheckCircle2 className="w-3 h-3" /> ON TRACK (Revised Schedule)
+                  <CheckCircle2 className="w-3 h-3" /> SLIGHTLY BEHIND (3 sessions missed)
                 </span>
               </div>
               <p className="text-xs text-slate-400">

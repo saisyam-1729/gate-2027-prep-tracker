@@ -297,18 +297,20 @@ export const INITIAL_WEEKLY_HOURS: WeeklyHourEntry[] = [
     raHours: 1,
     daHours: 0,
     gaHours: 0,
-    notes: 'RA Diagnostic completed (1/10). Weekend focus: KCL/KVL, Node/Mesh, Thevenin/Norton + Sunday DBMS ER/Relational Algebra.',
+    notes:
+      'Logged honestly: RA diagnostic only (~1h, 1/10). Sat 24 Oct and Sun 25 Oct study blocks were missed. Do not backfill fake hours. Circuits weekend moves to 31 Oct–1 Nov.',
   },
   {
     weekNumber: 3,
-    label: 'Week 3 (26 Oct – 1 Nov) — Phase 1: Transients, AC & Digital Logic',
+    label: 'Week 3 (26 Oct – 1 Nov) — Restart after 3 missed sessions',
     startDate: '2026-10-26',
     endDate: '2026-11-01',
     targetHours: 15,
     raHours: 0,
     daHours: 0,
     gaHours: 0,
-    notes: 'Current Active Week: Complete Network Theorems, RC/RL Transients, start Digital Circuits + DBMS SQL/Normal Forms.',
+    notes:
+      'Mon 26 Oct missed (with Sat 24 and Sun 25). Tue 27 Oct is a normal 2h restart: KCL/KVL, node and mesh, 15m GA. Wed–Fri stay 2h. Sat 31 Oct and Sun 1 Nov carry the original circuits weekend. Phase 1 still ends 29 Nov if this weekend happens.',
   },
   {
     weekNumber: 4,
