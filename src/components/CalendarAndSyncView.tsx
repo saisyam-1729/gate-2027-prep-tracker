@@ -185,7 +185,7 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     title: '⚡ GATE 2027 Saturday Deep-Dive: 100% RA (Circuits / Robotics / Control)',
     details:
       'Block 1 (90m): NPTEL/Modern Robotics lectures + 15 problems.\nBlock 2 (90m): Problem solving.\nBlock 3 (60m): Next module.\nLast 15m: Update GATE 2027 Tracker & rate confidence (1-5).',
-    dateStr: '2026-10-31',
+    dateStr: '2026-11-07',
     startHour: weekendHour,
     startMinute: 0,
     durationMinutes: 330,
@@ -197,7 +197,7 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     title: '🧠 GATE 2027 Sunday Session: RA Core (3h) + DA Gap (1h) + Mixed Quiz (45m)',
     details:
       '1) Finish RA weekend module with problems (180m)\n2) Dedicated DA session: DBMS / Warehousing / Classical AI (60m)\n3) Mixed Quiz via Tracker or Claude/Gemini (45m)\n4) Log weekly hours (15m).',
-    dateStr: '2026-11-01',
+    dateStr: '2026-11-08',
     startHour: weekendHour,
     startMinute: 0,
     durationMinutes: 330,
@@ -209,7 +209,7 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     title: '🎯 GATE 2027 Weekday Study Slot (1h Problems + 45m Quiz/Review + 15m GA)',
     details:
       'Hour 1: New material or GATE proxy problems.\nHour 2: Topic quiz / mistake-notebook review + 15-min General Aptitude set.',
-    dateStr: '2026-10-27',
+    dateStr: '2026-11-02',
     startHour: weekdayHour,
     startMinute: 0,
     durationMinutes: 120,
@@ -221,12 +221,12 @@ export const CalendarAndSyncView: React.FC<CalendarAndSyncViewProps> = ({
     title:
       '☁️ Low-Footprint Cert Micro-Sprint: Anthropic Claude CCA-F & Google Cloud PMLE (45m)',
     details:
-      'Low-footprint certification micro-track (~1.5 hrs/week total across Wed & Sun):\n1) 25 mins: 1 CCA-F Task Statement (ccar-f.17labs.ai / Skilljar) OR 1 GCP PMLE Section (BigQuery ML / Feature Store / MLOps)\n2) 20 mins: 10 scenario practice questions (AndyTheFactory/gcp-pmle-quiz or CCA-F 12 Sample Qs).\nAutomatically pauses Jan 18, 2027 for 100% GATE Lock-in!',
-    dateStr: '2026-10-28',
+      'Low-footprint certification micro-track (~1.5 hrs/week total across Wed & Sun):\n1) 25 mins: 1 CCA-F Task Statement (ccar-f.17labs.ai / Skilljar) OR 1 GCP PMLE Section (BigQuery ML / Feature Store / MLOps)\n2) 20 mins: 10 scenario practice questions (AndyTheFactory/gcp-pmle-quiz or CCA-F 12 Sample Qs).\nPauses on 25 Jan 2027 for 100% GATE Lock-in!',
+    dateStr: '2026-11-04',
     startHour: 13,
     startMinute: 0,
     durationMinutes: 45,
-    recurrenceRule: 'RRULE:FREQ=WEEKLY;BYDAY=WE,SU;UNTIL=20270117T235959Z',
+    recurrenceRule: 'RRULE:FREQ=WEEKLY;BYDAY=WE,SU;UNTIL=20270124T235959Z',
     calendarEmail,
   });
 

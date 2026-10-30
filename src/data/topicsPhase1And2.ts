@@ -2,7 +2,7 @@ import { StudyTopic } from '../types';
 
 export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
   // ============================================================================
-  // PHASE 1: FOUNDATIONS (Now – 29 Nov 2026)
+  // PHASE 1: FOUNDATIONS (2 Nov – 6 Dec 2026)
   // RA Focus: Circuits & Network Theorems, Digital Circuits, Differential Equations,
   //           Laplace & Fourier, Vector Calculus
   // DA Focus: DBMS (ER model, relational algebra, SQL, normal forms, indexing)
@@ -16,10 +16,8 @@ export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
     phase: 1,
     priority: 'core',
     estimatedHours: 8,
-    status: 'in_progress',
+    status: 'not_started',
     confidence: 1,
-    lastStudied: '2026-10-24',
-    nextReviewDue: '2026-10-29',
     primaryResource: 'NPTEL Basic Electrical Circuits (Prof. Nagendra Krishnapura, IITM) + Alexander & Sadiku Ch. 1–3',
     primaryResourceUrl: 'https://www.youtube.com/playlist?list=PLdzewXO9j7aqkQARDMKuuboDmRahPHLWy',
     proxyPapers: 'GATE EE / IN / EC (Network Theory — KCL, KVL, Nodal & Mesh)',
@@ -36,7 +34,7 @@ export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
       { title: 'NPTEL Course Portal — Basic Electrical Circuits (IIT Madras)', url: 'https://nptel.ac.in/courses/108106172', type: 'nptel' },
       { title: 'GateOverflow EE — Network Theory Solved Questions', url: 'https://gateoverflow.in/tag/network-theory', type: 'pyq' }
     ],
-    notes: 'Diagnostic Q1 baseline: Series circuit current was a Gap (Confidence = 1). Priority #1 for Weekend 1 (two 90-min blocks + 20 practice problems).',
+    notes: 'Diagnostic Q1 baseline: Series circuit current was a Gap (Confidence = 1). First study block is Monday 2 Nov 2026, then the circuits weekend of 7–8 Nov.',
     quizLogs: [
       {
         id: 'diag-ra-baseline',
@@ -60,8 +58,6 @@ export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
     estimatedHours: 7,
     status: 'not_started',
     confidence: 1,
-    lastStudied: '2026-10-24',
-    nextReviewDue: '2026-10-29',
     primaryResource: 'NPTEL Basic Electrical Circuits Weeks 5–6 (Prof. Nagendra Krishnapura) + Alexander & Sadiku Ch. 4',
     primaryResourceUrl: 'https://www.youtube.com/playlist?list=PLdzewXO9j7aqkQARDMKuuboDmRahPHLWy',
     proxyPapers: 'GATE EE / IN / EC (Network Theorems)',
@@ -147,8 +143,6 @@ export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
     estimatedHours: 6,
     status: 'not_started',
     confidence: 1,
-    lastStudied: '2026-10-23',
-    nextReviewDue: '2026-10-28',
     primaryResource: 'MIT OCW 18.03 Differential Equations + Erwin Kreyszig + 3Blue1Brown',
     primaryResourceUrl: 'https://www.youtube.com/playlist?list=PLUl4u3cNGP63oTpyxCMLKt_JmB0WtSZfG',
     proxyPapers: 'GATE ME / EE / EC / IN / CS (Engineering Mathematics — ODEs & Laplace)',
@@ -203,8 +197,6 @@ export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
     estimatedHours: 5,
     status: 'not_started',
     confidence: 1,
-    lastStudied: '2026-10-23',
-    nextReviewDue: '2026-10-28',
     primaryResource: 'MIT OCW 18.02 Multivariable Calculus + 3Blue1Brown Div & Curl + Kreyszig Ch. 9–10',
     primaryResourceUrl: 'https://www.youtube.com/watch?v=rB83DpBJQsE',
     proxyPapers: 'GATE ME / EE / EC / IN (Vector Calculus & Multiple Integrals)',
@@ -279,7 +271,7 @@ export const PHASE_1_AND_2_TOPICS: StudyTopic[] = [
   },
 
   // ============================================================================
-  // PHASE 2: ROBOTICS CORE & CLASSICAL AI (30 Nov – 27 Dec 2026)
+  // PHASE 2: ROBOTICS CORE & CLASSICAL AI (7 Dec 2026 – 3 Jan 2027)
   // RA Focus: Sensors, Actuators, Engineering Mechanics, Robot Kinematics (with Python),
   //           Automation & CIM, Python & Data Structures
   // DA Focus: Data Warehousing, Classical AI (Search, Logic, Variable Elimination)

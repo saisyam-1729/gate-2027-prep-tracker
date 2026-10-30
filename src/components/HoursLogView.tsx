@@ -66,7 +66,8 @@ export const HoursLogView: React.FC<HoursLogViewProps> = ({
         {weeklyHours.map((week) => {
           const sum = week.raHours + week.daHours + week.gaHours + (week.certHours || 0);
           const pct = Math.min(100, Math.round((sum / Math.max(1, week.targetHours)) * 100));
-          const isCurrentWeek = week.weekNumber === 3; // Oct 26 - Nov 1, 2026
+          const today = new Date().toISOString().slice(0, 10);
+          const isCurrentWeek = today >= week.startDate && today <= week.endDate;
 
           return (
             <div

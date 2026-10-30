@@ -2,7 +2,7 @@ import { StudyTopic } from '../types';
 
 export const PHASE_3_AND_4_TOPICS: StudyTopic[] = [
   // ============================================================================
-  // PHASE 3: CONTROL & PART B1 ELECTRICAL (28 Dec 2026 – 17 Jan 2027)
+  // PHASE 3: CONTROL & PART B1 ELECTRICAL (4 Jan – 24 Jan 2027)
   // ============================================================================
   {
     id: 'ra-b13-modeling-block-sfg',
@@ -416,7 +416,7 @@ export const PHASE_3_AND_4_TOPICS: StudyTopic[] = [
   },
 
   // ============================================================================
-  // PHASE 4: REVISION, NUMERICAL METHODS & FULL MOCKS (18 Jan – 7 Feb 2027)
+  // PHASE 4: REVISION, NUMERICAL METHODS & FULL MOCKS (25 Jan – 5 Feb 2027)
   // ============================================================================
   {
     id: 'ra-a15-numerical-methods',

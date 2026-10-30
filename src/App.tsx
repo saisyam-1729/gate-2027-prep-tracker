@@ -64,6 +64,36 @@ export type ActiveTab =
   | 'hours_log'
   | 'portfolio';
 
+function applyNovember2Reset(parsed: TrackerState): TrackerState {
+  const planAlreadyStarts2Nov = parsed.weeklyHours?.some(
+    (w) => w.weekNumber === 1 && w.startDate === '2026-11-02'
+  );
+  if (planAlreadyStarts2Nov) return parsed;
+  const placeholderReviewIds = new Set([
+    'ra-a2-circuits-kcl-kvl',
+    'ra-a2-network-theorems',
+    'ra-a13-ode-laplace',
+    'ra-a12-multivariable-vector-calc',
+  ]);
+  return {
+    ...parsed,
+    version: '1.3.0',
+    lastUpdated: new Date().toISOString(),
+    weeklyHours: INITIAL_WEEKLY_HOURS.map((w) => ({ ...w })),
+    topics: parsed.topics.map((t) => {
+      if (!placeholderReviewIds.has(t.id)) return t;
+      const anySubtopicDone = t.subtopics.some((s) => s.completed);
+      if (anySubtopicDone) return t;
+      return {
+        ...t,
+        status: t.status === 'done' ? t.status : 'not_started',
+        lastStudied: undefined,
+        nextReviewDue: undefined,
+      };
+    }),
+  };
+}
+
 function getInitialTrackerState(): TrackerState {
   try {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -85,34 +115,7 @@ function getInitialTrackerState(): TrackerState {
         if (!parsed.dailyCheckins) {
           parsed.dailyCheckins = {};
         }
-        // Keep the hours log honest after the missed 24, 25, and 26 Oct sessions,
-        // without overwriting hours the person has already typed in.
-        const missedNotes: Record<number, { label: string; notes: string }> = {
-          2: {
-            label: 'Week 2 (19–25 Oct) — Restart Weekend (Circuits + DBMS)',
-            notes:
-              'Logged honestly: RA diagnostic only (~1h, 1/10). Sat 24 Oct and Sun 25 Oct study blocks were missed. Do not backfill fake hours. Circuits weekend moves to 31 Oct–1 Nov.',
-          },
-          3: {
-            label: 'Week 3 (26 Oct – 1 Nov) — Restart after 3 missed sessions',
-            notes:
-              'Mon 26 Oct missed (with Sat 24 and Sun 25). Tue 27 Oct is a normal 2h restart: KCL/KVL, node and mesh, 15m GA. Wed–Fri stay 2h. Sat 31 Oct and Sun 1 Nov carry the original circuits weekend. Phase 1 still ends 29 Nov if this weekend happens.',
-          },
-        };
-        parsed.weeklyHours = parsed.weeklyHours.map((w) => {
-          const patch = missedNotes[w.weekNumber];
-          if (!patch) return w;
-          const untouched =
-            (w.weekNumber === 2 && w.raHours <= 1 && w.daHours === 0 && w.gaHours === 0) ||
-            (w.weekNumber === 3 &&
-              w.raHours === 0 &&
-              w.daHours === 0 &&
-              w.gaHours === 0 &&
-              (w.certHours || 0) === 0);
-          if (!untouched) return w;
-          return { ...w, label: patch.label, notes: patch.notes };
-        });
-        return parsed;
+        return applyNovember2Reset(parsed);
       }
     }
   } catch {
@@ -122,7 +125,7 @@ function getInitialTrackerState(): TrackerState {
       if (backupsRaw) {
         const backups = JSON.parse(backupsRaw) as TrackerState[];
         if (Array.isArray(backups) && backups.length > 0) {
-          return backups[0];
+          return applyNovember2Reset(backups[0]);
         }
       }
     } catch {
@@ -131,7 +134,7 @@ function getInitialTrackerState(): TrackerState {
   }
 
   return {
-    version: '1.2.0',
+    version: '1.3.0',
     lastUpdated: new Date().toISOString(),
     candidateName: 'Potukuchi Shanmukha Sai Syam (@SyamP)',
     enrollmentId: 'M249R74',
@@ -198,10 +201,9 @@ export function App() {
         setState((prev) => {
           const remoteTime = new Date(remoteState.lastUpdated || 0).getTime();
           const localTime = new Date(prev.lastUpdated || 0).getTime();
-          if (remoteTime > localTime && Array.isArray(remoteState.topics)) {
-            return remoteState;
-          }
-          return prev;
+          const chosen =
+            remoteTime > localTime && Array.isArray(remoteState.topics) ? remoteState : prev;
+          return applyNovember2Reset(chosen);
         });
       })
       .catch(() => {
@@ -497,8 +499,7 @@ export function App() {
         ...prev,
         lastUpdated: new Date().toISOString(),
         weeklyHours: prev.weeklyHours.map((w) => {
-          // Week 3 is active week (26 Oct - 1 Nov 2026)
-          if (w.weekNumber !== 3) return w;
+          if (today < w.startDate || today > w.endDate) return w;
           const prevVal = Number(w[track] || 0);
           return {
             ...w,
@@ -648,8 +649,8 @@ export function App() {
                 <b>Daily Top-AIR Reminder:</b> You have completed{' '}
                 <b>{completedNonNegotiablesCount}/4</b> Daily Non-Negotiables today
                 {!todayCheckin.ga15MinDone ? ' (15m General Aptitude still pending!)' : ''}
-                {dueReviewsCount > 0 ? ` • ${dueReviewsCount} Spaced Review(s) due` : ''}. Zero
-                zero-days between now and Feb 7!
+                {dueReviewsCount > 0 ? ` • ${dueReviewsCount} Spaced Review(s) due` : ''}. Plan
+                starts Monday 2 Nov and runs through Friday 5 Feb.
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -683,7 +684,7 @@ export function App() {
                   GATE 2027 Command Center — RA (Top AIR Target) & DA
                 </h1>
                 <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  <CheckCircle2 className="w-3 h-3" /> SLIGHTLY BEHIND (3 sessions missed)
+                  <CheckCircle2 className="w-3 h-3" /> STARTS 2 NOV 2026
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -847,7 +848,7 @@ export function App() {
             state={state}
             syncConfig={syncConfig}
             onUpdateSyncConfig={setSyncConfig}
-            onRestoreState={(newState) => setState(newState)}
+            onRestoreState={(newState) => setState(applyNovember2Reset(newState))}
           />
         )}
       </main>

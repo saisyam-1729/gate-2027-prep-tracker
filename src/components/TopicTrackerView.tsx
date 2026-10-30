@@ -88,7 +88,7 @@ export const TopicTrackerView: React.FC<TopicTrackerViewProps> = ({
           <div className="text-sm font-bold text-white mt-0.5">
             Complete Syllabus ({topics.length} Modules)
           </div>
-          <div className="text-[11px] text-slate-400 mt-1">24 Oct 2026 – 7 Feb 2027</div>
+          <div className="text-[11px] text-slate-400 mt-1">2 Nov 2026 – 5 Feb 2027</div>
         </button>
 
         {ROADMAP_PHASES.map((phase) => {

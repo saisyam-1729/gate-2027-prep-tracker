@@ -79,14 +79,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               Active
             </div>
             <h2 className="text-base md:text-lg font-bold text-white mt-1">
-              Revised Roadmap Active (24 Oct – 7 Feb) • RA Baseline 1/10 Logged • Starting
-              Confidences Set
+              Plan starts Monday 2 Nov 2026 and finishes Friday 5 Feb 2027 • RA Baseline 1/10
+              Logged • Starting Confidences Set
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 mt-2 text-xs text-slate-300">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <span>
-                  Phase dates stay on the revised schedule. Status: <b>slightly behind</b> after Sat 24, Sun 25, and Mon 26 Oct were missed
+                  Timeline reset. Day 1 is Monday 2 Nov 2026. October misses stay in the log and are outside this plan.
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -206,10 +206,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="flex items-center justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
-                Active Phase 1: Foundations (Now – 29 Nov 2026)
+                Phase 1: Foundations (2 Nov – 6 Dec 2026)
               </span>
               <h3 className="text-lg font-bold text-white mt-0.5">
-                Tonight is a normal 2-hour restart. The missed weekend moves to 31 Oct–1 Nov.
+                Day 1 is Monday 2 Nov. The first circuits weekend is 7–8 Nov.
               </h3>
             </div>
             <button
@@ -223,7 +223,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2.5">
               <div className="text-xs font-bold text-indigo-300 uppercase tracking-wider">
-                ⚡ This Saturday, 31 Oct (5–6 Hours, 100% RA)
+                ⚡ First Saturday, 7 Nov (5–6 Hours, 100% RA)
               </div>
               <ul className="space-y-2 text-xs text-slate-300 leading-relaxed">
                 <li>
@@ -243,7 +243,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2.5">
               <div className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                🧠 This Sunday, 1 Nov (5–6 Hours, RA + DA + Quiz)
+                🧠 First Sunday, 8 Nov (5–6 Hours, RA + DA + Quiz)
               </div>
               <ul className="space-y-2 text-xs text-slate-300 leading-relaxed">
                 <li>
@@ -296,9 +296,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
               <b>How both fit without derailing GATE:</b> Leverage your full-time AI/ML role + GATE DA overlap! Do <b>one 25-min commute/lunch slot on Wed/Thu</b> + <b>one 45-min Sunday evening slot</b>:
-              {' '}<b>Phases 1–2 (Oct–Dec):</b> Anthropic <i>Claude Certified Architect – Foundations</i> (5 domains) + GCP PMLE Sec 1–3 (BigQuery ML & Feature Store pair directly with GATE DA DBMS/Warehousing).{' '}
-              <b>Phase 3 (Dec 28–Jan 17):</b> GCP PMLE Sec 4–6 (MLOps Pipelines, Serving & Explainable AI).{' '}
-              <b>Phase 4 (Jan 18–Feb 7):</b> Paused for 100% GATE Mock Lock-in!
+              {' '}<b>Phases 1–2 (2 Nov – 3 Jan):</b> Anthropic <i>Claude Certified Architect – Foundations</i> (5 domains) + GCP PMLE Sec 1–3 (BigQuery ML & Feature Store pair directly with GATE DA DBMS/Warehousing).{' '}
+              <b>Phase 3 (4–24 Jan):</b> GCP PMLE Sec 4–6 (MLOps Pipelines, Serving & Explainable AI).{' '}
+              <b>Phase 4 (25 Jan – 5 Feb):</b> Paused for 100% GATE Mock Lock-in!
             </p>
           </div>
         </div>
